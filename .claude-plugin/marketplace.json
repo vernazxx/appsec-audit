@@ -1,0 +1,17 @@
+{
+  "name": "appsec-audit",
+  "owner": {
+    "name": "Vernaz",
+    "url": "https://github.com/vernazxx"
+  },
+  "metadata": {
+    "description": "Application security audit plugins for Claude Code."
+  },
+  "plugins": [
+    {
+      "name": "appsec-audit",
+      "source": "./plugins/appsec-audit",
+      "description": "Senior security auditor agent with OWASP Top 10:2025 / Cheat Sheet review, pinned opengrep SAST, optional Aikido, and zizmor CI/CD supply-chain audit."
+    }
+  ]
+}

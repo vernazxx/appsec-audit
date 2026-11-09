@@ -1,0 +1,67 @@
+rules:
+  - id: go-http-default-client-no-timeout
+    languages: [go]
+    severity: WARNING
+    message: >-
+      Outbound request via net/http's default client, which has no timeout. A slow
+      or hostile server can hold the connection open indefinitely (resource
+      exhaustion). Use an http.Client with an explicit Timeout and redirect policy.
+    patterns:
+      - pattern-either:
+          - pattern: http.Get(...)
+          - pattern: http.Head(...)
+          - pattern: http.Post(...)
+          - pattern: http.PostForm(...)
+          - pattern: http.DefaultClient
+    metadata:
+      category: security
+      cwe: ["CWE-400: Uncontrolled Resource Consumption"]
+      owasp: ["A10:2025 - Mishandling of Exceptional Conditions"]
+      confidence: HIGH
+      likelihood: MEDIUM
+      impact: MEDIUM
+      references:
+        - https://cheatsheetseries.owasp.org/cheatsheets/Denial_of_Service_Cheat_Sheet.html
+        - https://pkg.go.dev/net/http#Client
+
+  - id: go-tls-insecure-skip-verify
+    languages: [go]
+    severity: ERROR
+    message: >-
+      TLS certificate verification disabled. Any on-path attacker can impersonate
+      the server. If an opt-out is genuinely required, gate it behind an explicit,
+      loudly named flag that defaults to false.
+    pattern: |
+      tls.Config{..., InsecureSkipVerify: true, ...}
+    metadata:
+      category: security
+      cwe: ["CWE-295: Improper Certificate Validation"]
+      owasp: ["A04:2025 - Cryptographic Failures"]
+      confidence: HIGH
+      likelihood: MEDIUM
+      impact: HIGH
+      references:
+        - https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Security_Cheat_Sheet.html
+
+  - id: go-tls-min-version-too-low
+    languages: [go]
+    severity: WARNING
+    message: >-
+      TLS minimum version below 1.2. OWASP recommends TLS 1.2 as the floor and
+      TLS 1.3 where possible.
+    pattern-either:
+      - pattern: |
+          tls.Config{..., MinVersion: tls.VersionTLS10, ...}
+      - pattern: |
+          tls.Config{..., MinVersion: tls.VersionTLS11, ...}
+      - pattern: |
+          tls.Config{..., MinVersion: tls.VersionSSL30, ...}
+    metadata:
+      category: security
+      cwe: ["CWE-327: Use of a Broken or Risky Cryptographic Algorithm"]
+      owasp: ["A04:2025 - Cryptographic Failures"]
+      confidence: HIGH
+      likelihood: LOW
+      impact: MEDIUM
+      references:
+        - https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Security_Cheat_Sheet.html
