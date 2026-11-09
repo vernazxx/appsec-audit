@@ -6,6 +6,8 @@
     "name": "Vernaz",
     "url": "https://github.com/vernazxx"
   },
+  "homepage": "https://github.com/vernazxx/appsec-audit#readme",
+  "repository": "https://github.com/vernazxx/appsec-audit",
   "license": "MIT",
   "keywords": [
     "security",
