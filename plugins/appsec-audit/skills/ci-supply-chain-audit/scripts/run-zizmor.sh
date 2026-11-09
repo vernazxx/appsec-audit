@@ -55,8 +55,9 @@ ZIZMOR_PIN="$(sed -n 's/^zizmor==\([0-9][0-9.]*\) .*/\1/p' "$LOCK" 2>/dev/null |
 # lock's hashes; the wheel holds only the zizmor executable, so unpacking it is
 # the whole install.
 install_ephemeral() {
-  command -v python3 >/dev/null 2>&1 && python3 -I -m pip --version >/dev/null 2>&1 \
-    || die 3 "--ephemeral needs python3 with pip"
+  if ! { command -v python3 >/dev/null 2>&1 && python3 -I -m pip --version >/dev/null 2>&1; }; then
+    die 3 "--ephemeral needs python3 with pip"
+  fi
   EPH_DIR="$(mktemp -d)"
   trap 'rm -rf "$EPH_DIR"' EXIT
   python3 -I -m pip download --quiet --no-input --disable-pip-version-check \
