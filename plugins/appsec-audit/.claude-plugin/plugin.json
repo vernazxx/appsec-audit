@@ -9,6 +9,7 @@
   "homepage": "https://github.com/vernazxx/appsec-audit#readme",
   "repository": "https://github.com/vernazxx/appsec-audit",
   "license": "MIT",
+  "icon": "assets/appsec-audit-icon-512.png",
   "keywords": [
     "security",
     "appsec",

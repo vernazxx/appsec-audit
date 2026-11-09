@@ -1,4 +1,17 @@
-# appsec-audit
+<p align="center">
+  <img src="assets/brand/appsec-audit-icon.svg" alt="appsec-audit icon: a neon shield under a magnifier with a check mark" width="128" height="128">
+</p>
+
+<h1 align="center">appsec-audit</h1>
+
+<p align="center"><em>Is your code what it claims to be?</em></p>
+
+<p align="center">
+  <a href="https://github.com/vernazxx/appsec-audit/actions/workflows/ci.yaml"><img src="https://github.com/vernazxx/appsec-audit/actions/workflows/ci.yaml/badge.svg?branch=main" alt="CI status"></a>
+  <a href="#quick-start"><img src="https://img.shields.io/badge/Claude_Code-plugin-FF3EA5?style=flat-square&labelColor=1A0F33" alt="Claude Code plugin"></a>
+  <a href="https://owasp.org/Top10/2025/"><img src="https://img.shields.io/badge/OWASP-Top_10%3A2025-FF8A1F?style=flat-square&labelColor=1A0F33" alt="OWASP Top 10:2025"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-3EF0FF?style=flat-square&labelColor=1A0F33" alt="MIT license"></a>
+</p>
 
 A [Claude Code](https://code.claude.com/docs/en/overview) plugin
 that reviews code the way a senior application security engineer would. It
@@ -280,6 +293,8 @@ plugins/appsec-audit/
   commands/                          # security-review, sast, ci-audit
   skills/<skill>/SKILL.md            # methodology; references/ and scripts/ alongside
   rules/                             # custom opengrep rules + tests
+  assets/appsec-audit-icon-512.png   # plugin icon ("icon" in plugin.json)
+assets/brand/                        # icon, banner, palette (see its README)
 scripts/                             # repo tooling (CI checks, opengrep installer)
 ```
 
