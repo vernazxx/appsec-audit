@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  manifests:
+    name: Plugin manifests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check manifests and frontmatter
+        run: scripts/check-plugin.sh
+
+  shellcheck:
+    name: Shell scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: shellcheck
+        # Preinstalled on the runner image
+        run: shellcheck --version && shellcheck scripts/*.sh plugins/*/skills/*/scripts/*.sh
+
+  rules:
+    name: Rules (opengrep)
+    runs-on: ubuntu-latest
+    env:
+      # Pinned together; Dependabot can't track these. Bump deliberately and
+      # re-verify (scripts/install-opengrep.sh checks sha256 + cosign identity).
+      OPENGREP_VERSION: v1.33.1
+      OPENGREP_SHA256: 46e8133cc490f9f50518061590ce2f6be5a08afaeda034471c0ceda4b3899808
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+        with:
+          cosign-release: v3.1.3
+      - name: Install opengrep (checksum + signature verified)
+        run: |
+          scripts/install-opengrep.sh "$OPENGREP_VERSION" "$OPENGREP_SHA256" "${RUNNER_TEMP}/opengrep"
+          echo "${RUNNER_TEMP}/opengrep" >> "$GITHUB_PATH"
+      - name: Custom rule tests
+        run: opengrep scan --test plugins/appsec-audit/rules
+      - name: run-scan.sh plan smoke test (no network)
+        run: |
+          plugins/appsec-audit/skills/sast-scan/scripts/run-scan.sh \
+            --target . --out "${RUNNER_TEMP}/plan" \
+            --rules-cache "${RUNNER_TEMP}/rules-cache" --plan-only
+          test ! -e "${RUNNER_TEMP}/rules-cache"
+
+  zizmor:
+    name: Workflow security (zizmor)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Run zizmor
+        # Installs zizmor from a wheel hash-pinned in the action's own tree
+        uses: zizmorcore/zizmor-action@53290badfa369cb0bf7ad16342cb62c2fa47ac7b # v0.8.0
+        with:
+          # Pinned instead of `latest`; bump deliberately (Dependabot doesn't track this)
+          version: 1.31.1
+          # Annotations rather than SARIF upload: works on fork PRs (whose token
+          # can't get security-events: write) and fails the job on findings
+          advanced-security: false
+          annotations: true

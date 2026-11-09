@@ -68,9 +68,18 @@ claude --plugin-dir ~/src/vernaz/appsec-audit/plugins/appsec-audit
 ```bash
 # custom rule tests
 opengrep scan --test plugins/appsec-audit/rules   # or: semgrep --metrics=off --test ...
-# manifest validation
+# manifest and frontmatter checks (also run in CI)
+scripts/check-plugin.sh
+# full validation (needs Claude Code; not run in CI)
 claude plugin validate . && claude plugin validate plugins/appsec-audit
+# shell scripts
+shellcheck scripts/*.sh plugins/*/skills/*/scripts/*.sh
 ```
+
+CI (`.github/workflows/ci.yaml`) runs the manifest checks, shellcheck, the rule
+tests with a sha256- and cosign-verified opengrep, a no-network `run-scan.sh`
+plan, and zizmor. Actions are pinned by commit SHA; opengrep and zizmor
+versions are pinned in the workflow and bumped by hand.
 
 Bump the pinned rules SHA only in a dedicated change, after reading the upstream diff.
 
