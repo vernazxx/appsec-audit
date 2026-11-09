@@ -1,0 +1,3 @@
+# Code owner for everything. With the require-review ruleset, PRs need
+# an approval from the owner, who merges their own PRs via the admin bypass.
+* @vernazxx
