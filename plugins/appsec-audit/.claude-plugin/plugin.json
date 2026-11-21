@@ -1,6 +1,6 @@
 {
   "name": "appsec-audit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Security code review toolkit: senior security auditor agent, OWASP Top 10:2025 and Cheat Sheet Series review methodology, pinned opengrep SAST with triage, optional Aikido scanning, and zizmor-driven CI/CD supply-chain audit.",
   "author": {
     "name": "Vernaz",

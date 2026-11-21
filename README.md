@@ -196,7 +196,7 @@ opengrep --version
 ```bash
 pacman -S zizmor                    # Arch
 brew install zizmor                 # macOS / Linuxbrew
-uv tool install zizmor==1.31.1      # PyPI, version-pinned
+uv tool install zizmor==1.32.0      # PyPI, version-pinned
 cargo install --locked zizmor
 ```
 

@@ -13,7 +13,7 @@ best-effort:
 
 ```bash
 pacman -S zizmor                    # Arch (community-maintained)
-uv tool install zizmor==1.31.1      # PyPI, version-pinned
+uv tool install zizmor==1.32.0      # PyPI, version-pinned
 brew install zizmor
 cargo install --locked zizmor       # --locked is strongly recommended upstream
 ```
